@@ -32,8 +32,5 @@ app
 app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
-app.use((req,res,next) => {
-  res.json({ message: "l'api est en ligne !"})
-})
 
 module.exports = app
