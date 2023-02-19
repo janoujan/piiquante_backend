@@ -14,7 +14,7 @@ const normalizePort = val => { // a function to normalize port if he's given as 
   }
   return false
 }
-const port = normalizePort(process.env.PORT || '8080')
+const port = normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
 const errorHandler = error => { // a function to handle connection error
