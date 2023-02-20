@@ -13,8 +13,8 @@ const saucesRoutes = require('./routes/sauces')
 const app = express()
 dotenv.config()
 
-mongoose.connect(process.env.DBACCESS,
-  {
+mongoose
+  .connect(process.env.DBACCESS, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -23,14 +23,24 @@ mongoose.connect(process.env.DBACCESS,
 
 mongoose.plugin(mongodbErrorHandler)
 
+// app.options('*', cors())
+
 app
   .use(express.json())
   .use(cors())
   .use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
   .use(mongoSanitize({ replaceWith: '_' }))
-  
+
 app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
+
+// Serve the static files from the dist directory
+app.use(express.static(path.join(__dirname, 'dist')))
+
+// Catch-all route that sends the index.html file
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
 
 module.exports = app
