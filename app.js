@@ -35,6 +35,15 @@ app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
+// adapt header for cors
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline';"
+  )
+  next()
+})
+
 // Serve the static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')))
 
