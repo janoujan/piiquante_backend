@@ -9,6 +9,7 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors')
 const path = require('path')
 const userRoutes = require('./routes/user')
 const saucesRoutes = require('./routes/sauces')
+const { v4: uuidv4 } = require('uuid') // Library used for CSP policy
 
 const app = express()
 dotenv.config()
@@ -23,9 +24,6 @@ mongoose
 
 mongoose.plugin(mongodbErrorHandler)
 
-// Library used to generate nonce
-const { v4: uuidv4 } = require('uuid') // Library used for CSP policy
-const helmet = require('helmet')
 app.use((req, res, next) => {
   // Setting the nonce on response object to be used later
   res.locals.nonce = uuidv4().replace(/\-/g, '')
@@ -40,7 +38,7 @@ app.use((req, res, next) => {
 })
 app.get('/', function (req, res) {
   // Whenever the index page is requested, attach the generated nonce by replacing a keyword
-  const filePath = path.resolve(__dirname, '../web/dist', 'index.html')
+  const filePath = path.resolve(__dirname, 'dist', 'index.html')
   // read in the index.html file
   fs.readFile(filePath, 'utf8', function (err, data) {
     if (err) {
@@ -52,7 +50,7 @@ app.get('/', function (req, res) {
   })
 })
 
-// app.options('*', cors())
+app.options('*', cors())
 
 app
   .use(express.json())
