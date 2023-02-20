@@ -23,6 +23,35 @@ mongoose
 
 mongoose.plugin(mongodbErrorHandler)
 
+// Library used to generate nonce
+const { v4: uuidv4 } = require('uuid') // Library used for CSP policy
+const helmet = require('helmet')
+app.use((req, res, next) => {
+  // Setting the nonce on response object to be used later
+  res.locals.nonce = uuidv4().replace(/\-/g, '')
+  // Defining the CSP middleware
+  const cspMiddleWare = helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      'style-src': ["'self'", `'nonce-${res.locals.nonce}'`]
+    }
+  })
+  cspMiddleWare(req, res, next)
+})
+app.get('/', function (req, res) {
+  // Whenever the index page is requested, attach the generated nonce by replacing a keyword
+  const filePath = path.resolve(__dirname, '../web/dist', 'index.html')
+  // read in the index.html file
+  fs.readFile(filePath, 'utf8', function (err, data) {
+    if (err) {
+      return console.log(err)
+    }
+    // replace the unique keyword (in this case 'random-csp-nonce') with server generated nonce
+    result = data.replace('random-csp-nonce', res.locals.nonce)
+    res.send(result)
+  })
+})
+
 // app.options('*', cors())
 
 app
