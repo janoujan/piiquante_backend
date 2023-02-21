@@ -30,14 +30,12 @@ app
   .use(express.json())
   .use(cors())
   .use(
-    helmet(
-      {
-        contentSecurityPolicy: false
-      },
-      {
-        referrerPolicy: { policy: 'origin' }
+    helmet({
+      contentSecurityPolicy: false,
+      referrerPolicy: {
+        policy: 'origin'
       }
-    )
+    })
   )
   .use(mongoSanitize({ replaceWith: '_' }))
 
