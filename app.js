@@ -40,7 +40,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
-    "script-src-attr 'unsafe-inline'; img-src 'https://*hotsauce-378315.oa.r.appspot.com/' 'https://*localhost:3000/' 'unsafe-inline';"
+    "script-src-attr 'unsafe-inline'; img-src 'unsafe-inline';"
   )
   next()
 })
