@@ -2,6 +2,8 @@ const Sauces = require('../models/sauces')
 const fs = require('fs')
 const httpStatus = require('http-status')
 
+const host = 'https://hotsauce-378315.oa.r.appspot.com'
+
 exports.findAllSauce = (req, res, next) => {
   Sauces.find()
     .then(sauces => res.status(httpStatus.OK).json(sauces))
@@ -20,7 +22,7 @@ exports.createSauce = (req, res, next) => {
     // make a new sauce
     ...sauceObject, // with the sauceObject from form/data
     userId: req.auth.userId, // with userId as UserId from auth.js
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` // with the URL to find our file from form/data
+    imageUrl: `${req.protocol}://${host}/images/${req.file.filename}` // with the URL to find our file from form/data
   })
   sauce
     .save() // save the new sauce
@@ -38,7 +40,7 @@ exports.modifySauce = async (req, res, next) => {
     const sauceObject = req.file
       ? {
           ...JSON.parse(req.body.sauce),
-          imageUrl: `${req.protocol}://${req.get('host')}/images/${
+          imageUrl: `${req.protocol}://${host}/images/${
             req.file.filename
           }`
         }
