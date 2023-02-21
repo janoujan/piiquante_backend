@@ -9,7 +9,6 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors')
 const path = require('path')
 const userRoutes = require('./routes/user')
 const saucesRoutes = require('./routes/sauces')
-const { v4: uuidv4 } = require('uuid') // Library used for CSP policy
 
 const app = express()
 dotenv.config()
@@ -24,26 +23,27 @@ mongoose
 
 mongoose.plugin(mongodbErrorHandler)
 
+// allow preflight across the board
 app.options('*', cors())
 
 app
   .use(express.json())
   .use(cors())
-  .use(helmet())
+  .use(
+    helmet(
+      {
+        contentSecurityPolicy: false
+      },
+      {
+        referrerPolicy: { policy: 'origin' }
+      }
+    )
+  )
   .use(mongoSanitize({ replaceWith: '_' }))
 
 app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
-
-// adapt header for csp
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "script-src-attr 'unsafe-inline'; "
-  )
-  next()
-})
 
 // Serve the static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')))
