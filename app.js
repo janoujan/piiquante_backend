@@ -36,7 +36,7 @@ app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
-adapt header for csp
+// adapt header for csp
 app.use((req, res, next) => {
   res.setHeader(
     'Content-Security-Policy',
