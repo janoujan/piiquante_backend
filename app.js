@@ -36,14 +36,14 @@ app.use('/api/auth', userRoutes)
 app.use('/api/sauces', saucesRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
-// adapt header for csp
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     'Content-Security-Policy',
-//     "script-src-attr 'unsafe-inline'; img-src *.hotsauce-378315.oa.r.appspot.com/ *.localhost:3000/ ;"
-//   )
-//   next()
-// })
+adapt header for csp
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "script-src-attr 'unsafe-inline'; img-src 'unsafe-inline' ;"
+  )
+  next()
+})
 
 // Serve the static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')))
